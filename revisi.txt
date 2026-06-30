@@ -1,0 +1,372 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               8.4.3 - MySQL Community Server - GPL
+-- Server OS:                    Win64
+-- HeidiSQL Version:             12.8.0.6908
+-- --------------------------------------------------------
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+-- Dumping structure for table kamiroom.faculties
+CREATE TABLE IF NOT EXISTS `faculties` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `nama_fakultas` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table kamiroom.faculties: ~3 rows (approximately)
+INSERT INTO `faculties` (`id`, `nama_fakultas`, `created_at`, `updated_at`) VALUES
+	(1, 'FIK', NULL, NULL),
+	(2, 'FEBIS', NULL, NULL),
+	(3, 'FIKES', NULL, NULL);
+
+-- Dumping structure for table kamiroom.users
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `fakultas_id` bigint unsigned DEFAULT NULL,
+  `nomor_identitas` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tanggal_lahir` date DEFAULT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `role` enum('mahasiswa','dosen','admin') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'mahasiswa',
+  `status_aktif` tinyint(1) NOT NULL DEFAULT '1',
+  `password_changed` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_email_unique` (`email`),
+  UNIQUE KEY `users_nomor_identitas_unique` (`nomor_identitas`),
+  KEY `users_fakultas_id_foreign` (`fakultas_id`),
+  CONSTRAINT `users_fakultas_id_foreign` FOREIGN KEY (`fakultas_id`) REFERENCES `faculties` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table kamiroom.users: ~6 rows (approximately)
+INSERT INTO `users` (`id`, `fakultas_id`, `nomor_identitas`, `name`, `email`, `tanggal_lahir`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `role`, `status_aktif`, `password_changed`) VALUES
+	(1, 1, 'ADM001', 'Admin Kampus', 'admin@kamiroom.test', '2000-01-01', NULL, '$2y$12$h6.kvEKArPtUl7XCjK6aKOvRNZXNGKdrmuPrKZ3mILFSwuk7xU3zy', NULL, NULL, '2026-06-13 13:08:58', 'admin', 1, 1),
+	(2, 1, '2313010001', 'Mahasiswa Demo', 'mahasiswa@kamiroom.test', '2005-05-15', NULL, '$2y$12$XaW2/tXaTw.L3A800mJfduxLJXrcnKZECG63JEBJlqbzLbV5mkeIC', NULL, NULL, '2026-06-12 09:17:25', 'mahasiswa', 1, 1),
+	(3, 2, '120001', 'Dosen Demo', 'dosen@kamiroom.test', '1985-08-20', NULL, '$2y$12$eofAyBA3PLq7HC06J0K6HuJc9XNQrSHXDixda98wtctAapKxmfY6W', NULL, NULL, NULL, 'dosen', 1, 0),
+	(4, 1, '25SA12345', 'Masis Demo 2', 'masisdemo@gmail.com', '2007-05-25', NULL, '$2y$12$H/GmCDLiZ5d739MAe7sHJeKRtWhl97XcKNZCROTL/WFWzsvbzdNXm', NULL, '2026-06-12 05:58:21', '2026-06-12 07:56:42', 'mahasiswa', 1, 1),
+	(5, 2, '25DA12345', 'Masis Demo 3', 'masisdemo3@test.dem3', '2006-07-26', NULL, '$2y$12$ctbsckFZ2HgkP6Z850XuZOzBXgYE0R0ULJ2xGpGTUsaPhUFH/CSEm', NULL, '2026-06-12 08:04:26', '2026-06-12 08:23:05', 'mahasiswa', 1, 1),
+	(6, 3, '253456789', 'Mahasiswa Test', 'masistest@test.uji', '2005-04-03', NULL, '$2y$12$U46mrV1AyXVRbDroYQGvOuIid8qMR/jf1kNINmUSBw7fgHfg61.D6', NULL, '2026-06-19 02:27:59', '2026-06-19 02:28:26', 'mahasiswa', 1, 0);
+
+-- Dumping structure for table kamiroom.rooms
+CREATE TABLE IF NOT EXISTS `rooms` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `fakultas_id` bigint unsigned NOT NULL,
+  `nama_ruangan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kapasitas` int NOT NULL,
+  `fasilitas` text COLLATE utf8mb4_unicode_ci,
+  `status` enum('tersedia','dipinjam','ditutup') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'tersedia',
+  `alasan_ditutup` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `rooms_fakultas_id_foreign` (`fakultas_id`),
+  CONSTRAINT `rooms_fakultas_id_foreign` FOREIGN KEY (`fakultas_id`) REFERENCES `faculties` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table kamiroom.rooms: ~6 rows (approximately)
+INSERT INTO `rooms` (`id`, `fakultas_id`, `nama_ruangan`, `kapasitas`, `fasilitas`, `status`, `alasan_ditutup`, `created_at`, `updated_at`) VALUES
+	(1, 1, 'R.101', 40, 'AC, Proyektor, Whiteboard', 'tersedia', NULL, NULL, NULL),
+	(2, 1, 'Lab Multimedia', 30, '30 PC, AC, Proyektor', 'tersedia', NULL, NULL, NULL),
+	(3, 2, 'R.201', 35, 'AC, LCD Projector', 'tersedia', NULL, NULL, NULL),
+	(4, 2, 'Aula FEBIS', 150, 'Sound System, Proyektor, Panggung', 'tersedia', NULL, NULL, '2026-06-12 04:20:35'),
+	(5, 3, 'Lab Keperawatan', 25, 'Bed Praktikum, AC, LCD', 'tersedia', NULL, NULL, NULL),
+	(6, 3, 'Aula FIKES', 100, 'Sound System, AC', 'ditutup', 'Perbaikan ac', NULL, '2026-06-12 04:19:51');
+
+ -- Dumping structure for table kamiroom.room_borrowings
+CREATE TABLE IF NOT EXISTS `room_borrowings` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned NOT NULL,
+  `room_id` bigint unsigned NOT NULL,
+  `mulai_peminjaman` datetime NOT NULL,
+  `selesai_peminjaman` datetime NOT NULL,
+  `kategori_pengaju` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `detail_pengaju` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_kegiatan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jumlah_peserta` int NOT NULL,
+  `deskripsi_kegiatan` text COLLATE utf8mb4_unicode_ci,
+  `file_pengajuan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` enum('menunggu','disetujui','ditolak','dibatalkan') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'menunggu',
+  `catatan_admin` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `surat_persetujuan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `revisi_dari` bigint unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `room_borrowings_user_id_foreign` (`user_id`),
+  KEY `room_borrowings_room_id_foreign` (`room_id`),
+  KEY `room_borrowings_revisi_dari_foreign` (`revisi_dari`),
+
+  CONSTRAINT `room_borrowings_revisi_dari_foreign`
+  FOREIGN KEY (`revisi_dari`)
+  REFERENCES `room_borrowings` (`id`)
+  ON DELETE SET NULL,
+  CONSTRAINT `room_borrowings_room_id_foreign` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `room_borrowings_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table kamiroom.room_borrowings: ~14 rows (approximately)
+INSERT INTO `room_borrowings` (`id`, `user_id`, `room_id`, `mulai_peminjaman`, `selesai_peminjaman`, `kategori_pengaju`, `detail_pengaju`, `nama_kegiatan`, `jumlah_peserta`, `deskripsi_kegiatan`, `file_pengajuan`, `status`, `catatan_admin`, `created_at`, `updated_at`, `surat_persetujuan`, `revisi_dari`) VALUES
+	(1, 2, 1, '2026-06-12 00:00:00', '2026-06-13 00:00:00', 'Mahasiswa', 'Uji coba', 'Uji coba 1', 10, 'k', 'pengajuan/Srf4zggUIAi6h2q8NIWAPMC00SNXQvkiQBmAXrjB.png', 'disetujui', NULL, '2026-06-12 02:37:34', '2026-06-12 02:49:46', NULL, NULL),
+	(2, 2, 4, '2026-06-12 12:00:00', '2026-06-12 13:00:00', 'Mahasiswa', 'Uji coba', 'Uji coba 1', 12, 'uji', 'pengajuan/zmrazuorjQmq97XFzTQTP4UBdIsI7cFsaDsZDFvs.png', 'disetujui', NULL, '2026-06-12 04:21:36', '2026-06-12 04:21:55', NULL, NULL),
+	(3, 2, 1, '2026-06-16 00:00:00', '2026-06-18 00:00:00', 'Mahasiswa', 'Uji coba', 'Uji coba 3', 12, 'u3', 'pengajuan/svGvBvZm8fG1X9OV2xkXXJZxuj4VL9KPpcGVFvHu.png', 'dibatalkan', NULL, '2026-06-12 04:51:37', '2026-06-12 04:52:12', NULL, NULL),
+	(4, 2, 3, '2026-06-16 00:00:00', '2026-06-18 00:00:00', 'Mahasiswa', 'uji 4', 'uji4', 14, 'u4', 'pengajuan/eBMQUpKdh6aWxXElcUqbx9jOLu4RIRqKhyi7nFjf.png', 'disetujui', NULL, '2026-06-12 04:53:08', '2026-06-12 04:53:37', NULL, NULL),
+	(5, 2, 2, '2026-06-13 08:00:00', '2026-06-14 00:00:00', 'Mahasiswa', 'p4', 'p4', 4, 'p4', 'pengajuan/4P3gV4pWJAiIgGSjJgR2HrMWVV5aWVxw09I3bqfp.pdf', 'disetujui', NULL, '2026-06-12 09:18:58', '2026-06-12 09:20:13', NULL, NULL),
+	(6, 2, 1, '2026-06-14 00:00:00', '2026-06-14 14:00:00', 'Mahasiswa', 'p5', 'p5', 10, 'p5', 'pengajuan/aexP2qzxG3r14IbwRfW9CRujbz3TlKOD8h35GTjQ.pdf', 'disetujui', NULL, '2026-06-13 04:54:46', '2026-06-13 05:27:59', 'surat-persetujuan/sVKUOzIpD9ueR8CehPGfc0qdnlAUKFJnuqycASNH.pdf', NULL),
+	(7, 2, 4, '2026-06-16 00:00:00', '2026-06-16 14:00:00', 'Mahasiswa', 'p6', 'p6', 10, 'p6', 'pengajuan/ZjjzX4VU6BkuZMcyraCNiYZCXUhkrdzOnime1csM.pdf', 'disetujui', NULL, '2026-06-13 06:00:43', '2026-06-13 06:15:19', 'surat-persetujuan/mQtOMbbZe9KmI79j7GHMFAfC3XjubZU9GE0n2L5F.pdf', NULL),
+	(8, 2, 5, '2026-06-13 13:45:00', '2026-06-13 14:00:00', 'Mahasiswa', 'p7', 'p7', 10, 'p7', 'pengajuan/zdWYkubrf4r8dtjvkRqoPGL0VlqpB3qZ7IsZ7lzf.pdf', 'ditolak', 'p7', '2026-06-13 06:22:38', '2026-06-13 06:30:27', NULL, NULL),
+	(9, 2, 5, '2026-06-13 14:00:00', '2026-06-13 15:00:00', 'Mahasiswa', 'p8', 'p8', 10, 'p8', 'pengajuan/JrhK10okOfjEEqU8RHgTRgyRkXogqPel3FVgnl3L.pdf', 'ditolak', 'p8', '2026-06-13 06:36:34', '2026-06-13 06:37:18', NULL, NULL),
+	(10, 2, 5, '2026-06-14 00:00:00', '2026-06-14 08:00:00', 'Mahasiswa', 'p9', 'u9', 5, 'u9', 'pengajuan/oMhRYsRJdNMXc66SmTSf7YVlkZfOxKUgMzUcdp0t.pdf', 'ditolak', 'uji9', '2026-06-13 07:19:16', '2026-06-13 07:20:09', NULL, NULL),
+	(11, 2, 5, '2026-06-14 00:00:00', '2026-06-14 08:00:00', 'Mahasiswa', 'p9', 'u9', 5, 'u9-revisi', 'pengajuan/eCzAUgDKbneBgGqeBnxW5QKgIsPjtQRjeI2zZenl.pdf', 'ditolak', 'pu-revisi9', '2026-06-13 07:29:02', '2026-06-13 07:42:55', NULL, 10),
+	(12, 2, 5, '2026-06-14 00:00:00', '2026-06-14 08:00:00', 'Mahasiswa', 'p9', 'u9', 5, 'u9-revisi2', 'pengajuan/CUs3r7uZmLyF4Y9YsE5YWXv2i5FD4Ga7NXE0ATdZ.pdf', 'disetujui', NULL, '2026-06-13 08:05:14', '2026-06-13 08:06:02', 'surat-persetujuan/dG65HYqMWXGYKmzqwN41SDAU71uCGHCOMy48kQoD.pdf', 11),
+	(13, 2, 1, '2026-06-15 09:00:00', '2026-06-15 10:00:00', 'Mahasiswa', 'p10', 'u10', 12, 'u10', 'pengajuan/jaZwevuOTzwEPpO35H7PmJOnRqL9zmSCJ5UJkV5P.pdf', 'ditolak', 'uji10', '2026-06-13 08:29:14', '2026-06-13 08:30:08', NULL, NULL),
+	(14, 2, 5, '2026-06-15 00:00:00', '2026-06-15 06:00:00', 'Mahasiswa', 'p11', 'u11', 12, 'u11', 'pengajuan/au4rRVArtahi7AulRbe7YcDYIMRk2gWEVeXyurNI.pdf', 'menunggu', NULL, '2026-06-13 10:39:51', '2026-06-13 10:39:51', NULL, NULL);
+
+-- Dumping structure for table kamiroom.notifications
+CREATE TABLE IF NOT EXISTS `notifications` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned NOT NULL,
+  `judul` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pesan` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `dibaca` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `notifications_user_id_foreign` (`user_id`),
+  CONSTRAINT `notifications_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table kamiroom.notifications: ~1 rows (approximately)
+INSERT INTO `notifications` (`id`, `user_id`, `judul`, `pesan`, `dibaca`, `created_at`, `updated_at`) VALUES
+	(1, 2, 'Pengajuan Ditolak', 'Pengajuan "u10" ditolak.', 1, '2026-06-13 08:30:08', '2026-06-13 08:35:11');
+
+-- Dumping structure for table kamiroom.borrowing_logs
+CREATE TABLE IF NOT EXISTS `borrowing_logs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `room_borrowing_id` bigint unsigned NOT NULL,
+  `aktivitas` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `borrowing_logs_room_borrowing_id_foreign` (`room_borrowing_id`),
+  CONSTRAINT `borrowing_logs_room_borrowing_id_foreign`
+    FOREIGN KEY (`room_borrowing_id`)
+    REFERENCES `room_borrowings` (`id`)
+    ON DELETE CASCADE
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table kamiroom.borrowing_logs: ~11 rows (approximately)
+INSERT INTO `borrowing_logs` (`id`, `room_borrowing_id`, `aktivitas`, `created_at`, `updated_at`) VALUES
+	(1, 8, 'Pengajuan dibuat', '2026-06-13 06:22:38', '2026-06-13 06:22:38'),
+	(2, 9, 'Pengajuan dibuat', '2026-06-13 06:36:34', '2026-06-13 06:36:34'),
+	(3, 9, 'Pengajuan ditolak admin', '2026-06-13 06:37:18', '2026-06-13 06:37:18'),
+	(4, 10, 'Pengajuan dibuat', '2026-06-13 07:19:16', '2026-06-13 07:19:16'),
+	(5, 10, 'Pengajuan ditolak admin', '2026-06-13 07:20:09', '2026-06-13 07:20:09'),
+	(6, 11, 'Pengajuan dibuat', '2026-06-13 07:29:02', '2026-06-13 07:29:02'),
+	(7, 11, 'Pengajuan ditolak admin', '2026-06-13 07:42:55', '2026-06-13 07:42:55'),
+	(8, 12, 'Pengajuan dibuat', '2026-06-13 08:05:14', '2026-06-13 08:05:14'),
+	(9, 12, 'Pengajuan disetujui admin', '2026-06-13 08:06:02', '2026-06-13 08:06:02'),
+	(10, 13, 'Pengajuan dibuat', '2026-06-13 08:29:14', '2026-06-13 08:29:14'),
+	(11, 13, 'Pengajuan ditolak admin', '2026-06-13 08:30:09', '2026-06-13 08:30:09'),
+	(12, 14, 'Pengajuan dibuat', '2026-06-13 10:39:52', '2026-06-13 10:39:52');
+
+-- Dumping structure for table kamiroom.announcements
+CREATE TABLE IF NOT EXISTS `announcements` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `judul` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `isi` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table kamiroom.announcements: ~2 rows (approximately)
+INSERT INTO `announcements` (`id`, `judul`, `isi`, `created_at`, `updated_at`) VALUES
+	(1, '20 Juni 2026 Pengajuan dibatasi', 'Pengajuan peminjaman ruangan dibatasi karena kegiatan wisuda universitas.', '2026-06-12 02:13:49', '2026-06-19 02:26:34'),
+	(2, '13 Juni 2026 Libur semester genap', 'Pengajuan ditutup', '2026-06-19 01:18:59', '2026-06-19 02:25:31');
+
+-- Dumping structure for table kamiroom.calendar_events
+CREATE TABLE IF NOT EXISTS `calendar_events` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `tanggal` date NOT NULL,
+  `status` enum('dibuka','terbatas','ditutup') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `judul` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `keterangan` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table kamiroom.calendar_events: ~3 rows (approximately)
+INSERT INTO `calendar_events` (`id`, `tanggal`, `status`, `judul`, `keterangan`, `created_at`, `updated_at`) VALUES
+	(1, '2026-02-12', 'ditutup', 'Wisuda', 'Pengajuan ditutup karena kegiatan wisuda.', '2026-06-12 02:13:49', '2026-06-19 01:39:46'),
+	(2, '2026-06-23', 'terbatas', 'Libur Semester', 'Pengajuan ditutup sementara', '2026-06-19 01:28:36', '2026-06-19 07:09:49'),
+	(3, '2026-06-19', 'terbatas', 'uji coba', 'tes', '2026-06-19 02:24:24', '2026-06-19 07:10:19');
+
+-- Dumping structure for table kamiroom.rules
+CREATE TABLE IF NOT EXISTS `rules` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `isi` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table kamiroom.rules: ~2 rows (approximately)
+INSERT INTO `rules` (`id`, `isi`, `created_at`, `updated_at`) VALUES
+	(1, 'Surat Permohonan dan TOR wajib digabung menjadi satu file PDF.', '2026-06-12 02:13:49', '2026-06-12 02:13:49'),
+	(2, 'Pengajuan dilakukan minimal H-3 sebelum kegiatan.', '2026-06-12 02:13:49', '2026-06-12 02:13:49'),
+	(3, 'Tidak mengotori ruangan', '2026-06-19 01:18:24', '2026-06-19 01:18:24');
+
+-- Dumping structure for table kamiroom.cache
+CREATE TABLE IF NOT EXISTS `cache` (
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` bigint NOT NULL,
+  PRIMARY KEY (`key`),
+  KEY `cache_expiration_index` (`expiration`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table kamiroom.cache: ~0 rows (approximately)
+
+-- Dumping structure for table kamiroom.cache_locks
+CREATE TABLE IF NOT EXISTS `cache_locks` (
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `owner` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` bigint NOT NULL,
+  PRIMARY KEY (`key`),
+  KEY `cache_locks_expiration_index` (`expiration`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table kamiroom.cache_locks: ~0 rows (approximately)
+
+-- Dumping structure for table kamiroom.jobs
+CREATE TABLE IF NOT EXISTS `jobs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `queue` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `attempts` smallint unsigned NOT NULL,
+  `reserved_at` int unsigned DEFAULT NULL,
+  `available_at` int unsigned NOT NULL,
+  `created_at` int unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `jobs_queue_index` (`queue`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table kamiroom.jobs: ~0 rows (approximately)
+
+-- Dumping structure for table kamiroom.job_batches
+CREATE TABLE IF NOT EXISTS `job_batches` (
+  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `total_jobs` int NOT NULL,
+  `pending_jobs` int NOT NULL,
+  `failed_jobs` int NOT NULL,
+  `failed_job_ids` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `options` mediumtext COLLATE utf8mb4_unicode_ci,
+  `cancelled_at` int DEFAULT NULL,
+  `created_at` int NOT NULL,
+  `finished_at` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table kamiroom.job_batches: ~0 rows (approximately)
+
+-- Dumping structure for table kamiroom.failed_jobs
+CREATE TABLE IF NOT EXISTS `failed_jobs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`),
+  KEY `failed_jobs_connection_queue_failed_at_index` (`connection`,`queue`,`failed_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table kamiroom.failed_jobs: ~0 rows (approximately)
+
+
+-- Dumping structure for table kamiroom.migrations
+CREATE TABLE IF NOT EXISTS `migrations` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table kamiroom.migrations: ~16 rows (approximately)
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
+	(1, '0001_01_01_000000_create_users_table', 1),
+	(2, '0001_01_01_000001_create_cache_table', 1),
+	(3, '0001_01_01_000002_create_jobs_table', 1),
+	(4, '2026_06_08_140024_create_faculties_table', 1),
+	(5, '2026_06_08_141400_modify_users_table', 1),
+	(6, '2026_06_09_044600_create_rooms_table', 1),
+	(7, '2026_06_10_064723_create_calendar_events_table', 1),
+	(8, '2026_06_10_064904_create_announcements_table', 1),
+	(9, '2026_06_10_064959_create_rules_table', 1),
+	(10, '2026_06_10_092721_remove_urutan_from_rules_table', 1),
+	(11, '2026_06_10_113444_create_room_borrowings_table', 1),
+	(12, '2026_06_12_091140_add_cancelled_status', 1),
+	(13, '2026_06_12_105852_add_alasan_ditutup_to_rooms_table', 2),
+	(14, '2026_06_13_114146_add_surat_persetujuan_to_room_borrowings_table', 3),
+	(15, '2026_06_13_130409_create_borrowing_logs_table', 4),
+	(16, '2026_06_13_135112_add_revisi_dari_to_room_borrowings_table', 5),
+	(17, '2026_06_13_151517_create_notifications_table', 6);
+
+-- Dumping structure for table kamiroom.password_reset_tokens
+CREATE TABLE IF NOT EXISTS `password_reset_tokens` (
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table kamiroom.password_reset_tokens: ~0 rows (approximately)
+
+
+-- Dumping structure for table kamiroom.sessions
+CREATE TABLE IF NOT EXISTS `sessions` (
+  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` bigint unsigned DEFAULT NULL,
+  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_agent` text COLLATE utf8mb4_unicode_ci,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `last_activity` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `sessions_user_id_index` (`user_id`),
+  KEY `sessions_last_activity_index` (`last_activity`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table kamiroom.sessions: ~2 rows (approximately)
+INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
+	('aeQ2LoJm1uJiXq539LeeFt2IebUTXgLStIbLflN2', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 Edg/149.0.0.0', 'eyJfdG9rZW4iOiJIdlpRZG9iWjByYk8zMU4xdXliU204TnJud05WUlBLM2xOQXl4NU9OIiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MDAwIiwicm91dGUiOiJsb2dpbiJ9LCJfZmxhc2giOnsib2xkIjpbXSwibmV3IjpbXX19', 1781849557),
+	('fpaga7YvoCkcMyOAjjkYCncflwdxqiB0NaOGwJj3', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36', 'eyJfdG9rZW4iOiJuYUNCSFVNVnhxR012WnUza3hsZm5mNjdOUUpvaE43SlhjbnJXblBuIiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MDAwXC9kYXNoYm9hcmQiLCJyb3V0ZSI6bnVsbH0sIl9mbGFzaCI6eyJvbGQiOltdLCJuZXciOltdfSwibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiOjJ9', 1781854644);
+
+
+/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
+
+
+
