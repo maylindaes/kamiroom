@@ -72,9 +72,33 @@
 
         <div class="card room-card h-100 border-0 shadow-sm">
 
+            @if($room->gambar)
+
+                <img
+                    src="{{ asset('storage/'.$room->gambar) }}"
+                    class="card-img-top room-image"
+                    alt="{{ $room->nama_ruangan }}"
+                >
+
+            @else
+
+                <div class="room-placeholder">
+
+                    <i class="bi bi-image fs-1 text-secondary"></i>
+
+                </div>
+
+            @endif
+
             <div class="card-body">
 
                 <div class="d-flex justify-content-between">
+
+                    <span class="badge bg-primary mb-3">
+
+                        {{ $room->faculty->nama_fakultas }}
+
+                    </span>
 
                     <h5 class="fw-bold text-dark">
                         {{ $room->nama_ruangan }}
@@ -161,7 +185,45 @@
 <style>
 
 .room-card{
-    transition:.25s;
+
+    transition:.3s;
+
+    overflow:hidden;
+
+    border-radius:18px;
+
+}
+
+.room-card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 18px 40px rgba(0,0,0,.15)!important;
+
+}
+
+.room-image{
+
+    height:220px;
+
+    width:100%;
+
+    object-fit:cover;
+
+}
+
+.room-placeholder{
+
+    height:220px;
+
+    background:#eef3ff;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
 }
 
 .room-card:hover{

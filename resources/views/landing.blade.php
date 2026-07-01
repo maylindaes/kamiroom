@@ -214,17 +214,27 @@ margin:auto;
 
 .stat-card{
 
-padding:28px 20px;
+padding:40px 25px;
 
 border-radius:20px;
 
-background:white;
+background:#fff;
 
 box-shadow:0 15px 35px rgba(0,0,0,.08);
 
-transition:.3s;
+transition:.35s;
 
 height:100%;
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+align-items:center;
+
+text-align:center;
 
 }
 
@@ -242,7 +252,7 @@ font-size:48px;
 
 color:#0d6efd;
 
-margin-bottom:18px;
+margin-bottom:20px;
 
 display:block;
 
@@ -250,25 +260,27 @@ display:block;
 
 .stat-card h2{
 
-font-size:48px;
-
-letter-spacing:1px;
+font-size:52px;
 
 font-weight:800;
 
-margin-bottom:10px;
+margin:0;
 
 color:#0d6efd;
+
+line-height:1.1;
 
 }
 
 .stat-card p{
 
-margin:0;
+margin-top:12px;
+
+font-size:18px;
 
 font-weight:600;
 
-font-size:18px;
+color:#444;
 
 }
 
@@ -518,21 +530,19 @@ ROOM PREVIEW
 
     border:none;
 
-    border-radius:20px;
+    border-radius:12px;
 
     overflow:hidden;
 
-    box-shadow:0 12px 30px rgba(0,0,0,.08);
-
     transition:.3s;
 
-    height:100%;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
 
 }
 
 .room-card:hover{
 
-    transform:translateY(-10px);
+    transform:translateY(-8px);
 
 }
 
@@ -544,7 +554,7 @@ ROOM PREVIEW
 
     object-fit:cover;
 
-    background:#eef2f7;
+    border-radius:12px 12px 0 0;
 
 }
 
@@ -1141,7 +1151,7 @@ alt="KamiRoom">
 
         </div>
 
-        <div class="stats-title">
+        <div class="stats-title" data-aos="fade-up">
 
             <h2>
 
@@ -1250,7 +1260,7 @@ class="feature">
 
 <div class="container">
 
-<div class="text-center mb-5">
+<div class="text-center mb-5" data-aos="fade-up">
 
 <h2 class="section-title">
 
@@ -1446,7 +1456,7 @@ Verifikasi surat persetujuan menggunakan QR Code.
 
     <div class="container">
 
-        <div class="text-center mb-5">
+        <div class="text-center mb-5" data-aos="fade-up">
 
             <h2 class="section-title">
 
@@ -1611,20 +1621,33 @@ Verifikasi surat persetujuan menggunakan QR Code.
 
         <div class="row g-4">
 
-            @foreach($rooms as $room)
+            @foreach($previewRooms as $room)
 
             <div class="col-lg-4" data-aos="zoom-in">
 
-                <div class="card room-card">
+                <div class="card room-card h-100">
 
-                    <img
-                        src="{{ asset('images/room-placeholder.png') }}"
-                        class="room-image"
-                        alt="Ruangan">
+                    @if($room->gambar)
 
-                    <div class="card-body">
+                        <img
+                            src="{{ asset('storage/'.$room->gambar) }}"
+                            class="room-image"
+                            alt="{{ $room->nama_ruangan }}"
+                        >
 
-                        <h5>
+                    @else
+
+                        <img
+                            src="https://placehold.co/600x350/e9ecef/6c757d?text=KamiRoom"
+                            class="room-image"
+                            alt="Default"
+                        >
+
+                    @endif
+
+                    <div class="card-body d-flex flex-column">
+
+                        <h5 class="fw-bold">
 
                             {{ $room->nama_ruangan }}
 
@@ -1648,7 +1671,8 @@ Verifikasi surat persetujuan menggunakan QR Code.
 
                         <a
                             href="/rooms/{{ $room->id }}"
-                            class="btn btn-primary rounded-pill mt-3">
+                            class="btn btn-primary rounded-pill mt-auto"
+                        >
 
                             Lihat Detail
 
@@ -1672,7 +1696,7 @@ Verifikasi surat persetujuan menggunakan QR Code.
 
     <div class="container">
 
-        <div class="text-center mb-5">
+        <div class="text-center mb-5" data-aos="fade-up">
 
             <h2 class="section-title">
 

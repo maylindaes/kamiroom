@@ -10,20 +10,20 @@ class LandingController extends Controller
 {
     public function index()
     {
-        $rooms = Room::with('faculty')
+        $previewRooms = Room::with('faculty')
             ->latest()
             ->take(3)
             ->get();
 
         return view('landing', [
 
-            'jumlahRuangan'   => Room::count(),
+            'jumlahRuangan' => Room::count(),
 
-            'jumlahFakultas'  => Faculty::count(),
+            'jumlahFakultas' => Faculty::count(),
 
             'jumlahPengajuan' => RoomBorrowing::count(),
 
-            'rooms' => $rooms
+            'previewRooms' => $previewRooms
 
         ]);
     }

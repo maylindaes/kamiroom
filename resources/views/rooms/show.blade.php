@@ -8,6 +8,24 @@
 
         <div class="card shadow-sm border-success mb-4">
 
+            @if($room->gambar)
+
+                <img
+                    src="{{ asset('storage/'.$room->gambar) }}"
+                    class="card-img-top room-image"
+                    alt="{{ $room->nama_ruangan }}"
+                >
+
+            @else
+
+                <img
+                    src="https://placehold.co/900x450/e9ecef/6c757d?text=KamiRoom"
+                    class="card-img-top room-image"
+                    alt="Default"
+                >
+
+            @endif
+
             <div class="card-body">
 
                 <div class="d-flex justify-content-between align-items-start">
@@ -328,8 +346,20 @@
 
 <style>
 
+.room-image{
+
+    width:100%;
+
+    height:320px;
+
+    object-fit:cover;
+
+}
+
 .table tbody tr:hover{
+
     background:#f8f9fa;
+
 }
 
 </style>

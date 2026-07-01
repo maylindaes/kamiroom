@@ -9,7 +9,7 @@
             Tambah Ruangan
         </h2>
 
-        <form action="/admin/rooms" method="POST">
+        <form action="/admin/rooms" method="POST" enctype="multipart/form-data">
 
             @csrf
 
@@ -27,16 +27,37 @@
             </div>
 
             <div class="mb-3">
+
                 <label class="form-label">
-                    Lokasi
+
+                    Fakultas
+
                 </label>
 
-                <input
-                    type="text"
-                    name="lokasi"
-                    class="form-control"
+                <select
+                    name="fakultas_id"
+                    class="form-select"
                     required
                 >
+
+                    <option value="">
+
+                        -- Pilih Fakultas --
+
+                    </option>
+
+                    @foreach($faculties as $faculty)
+
+                        <option value="{{ $faculty->id }}">
+
+                            {{ $faculty->nama_fakultas }}
+
+                        </option>
+
+                    @endforeach
+
+                </select>
+
             </div>
 
             <div class="mb-3">
@@ -65,22 +86,55 @@
             </div>
 
             <div class="mb-3">
+
                 <label class="form-label">
+
+                    Gambar Ruangan
+
+                </label>
+
+                <input
+                    type="file"
+                    name="gambar"
+                    class="form-control"
+                    accept="image/*"
+                >
+
+                <small class="text-muted">
+
+                    Format: JPG, JPEG atau PNG (maks. 2 MB)
+
+                </small>
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
                     Status
+
                 </label>
 
                 <select
                     name="status"
                     class="form-select"
                 >
-                    <option value="dibuka">
-                        Dibuka
+
+                    <option value="tersedia">
+
+                        Tersedia
+
                     </option>
 
                     <option value="ditutup">
+
                         Ditutup
+
                     </option>
+
                 </select>
+
             </div>
 
             <button

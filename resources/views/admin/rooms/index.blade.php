@@ -140,6 +140,7 @@
 
                     <tr>
 
+                        <th>Gambar</th>
                         <th>Ruangan</th>
                         <th>Fakultas</th>
                         <th>Kapasitas</th>
@@ -156,6 +157,39 @@
                     @forelse($rooms as $room)
 
                     <tr>
+
+                        <td width="110">
+
+                            @if($room->gambar)
+
+                                <img
+                                    src="{{ asset('storage/'.$room->gambar) }}"
+                                    width="90"
+                                    height="70"
+                                    style="
+                                        object-fit:cover;
+                                        border-radius:10px;
+                                    "
+                                >
+
+                            @else
+
+                                <div
+                                    class="bg-light d-flex align-items-center justify-content-center"
+                                    style="
+                                        width:90px;
+                                        height:70px;
+                                        border-radius:10px;
+                                    "
+                                >
+
+                                    <i class="bi bi-image text-secondary fs-3"></i>
+
+                                </div>
+
+                            @endif
+
+                        </td>
 
                         <td>
 
@@ -246,7 +280,7 @@
 
                     <tr>
 
-                        <td colspan="6">
+                        <td colspan="7">
 
                             <div class="text-center py-4">
 

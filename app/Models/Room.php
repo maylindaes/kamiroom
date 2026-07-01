@@ -13,7 +13,8 @@ class Room extends Model
         'kapasitas',
         'fasilitas',
         'status',
-        'alasan_ditutup'
+        'alasan_ditutup',
+        'gambar'
     ];
 
     public function faculty()

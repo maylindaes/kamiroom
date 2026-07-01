@@ -12,6 +12,7 @@
         <form
             action="/admin/rooms/{{ $room->id }}"
             method="POST"
+            enctype="multipart/form-data"
         >
 
             @csrf
@@ -32,17 +33,34 @@
             </div>
 
             <div class="mb-3">
+
                 <label class="form-label">
-                    Lokasi
+
+                    Fakultas
+
                 </label>
 
-                <input
-                    type="text"
-                    name="lokasi"
-                    class="form-control"
-                    value="{{ $room->lokasi }}"
+                <select
+                    name="fakultas_id"
+                    class="form-select"
                     required
                 >
+
+                    @foreach($faculties as $faculty)
+
+                        <option
+                            value="{{ $faculty->id }}"
+                            {{ $room->fakultas_id == $faculty->id ? 'selected' : '' }}
+                        >
+
+                            {{ $faculty->nama_fakultas }}
+
+                        </option>
+
+                    @endforeach
+
+                </select>
+
             </div>
 
             <div class="mb-3">
@@ -72,28 +90,75 @@
             </div>
 
             <div class="mb-3">
+
                 <label class="form-label">
+
+                    Gambar Ruangan
+
+                </label>
+
+                @if($room->gambar)
+
+                    <div class="mb-3">
+
+                        <img
+                            src="{{ asset('storage/'.$room->gambar) }}"
+                            width="220"
+                            class="img-thumbnail"
+                        >
+
+                    </div>
+
+                @endif
+
+                <input
+                    type="file"
+                    name="gambar"
+                    class="form-control"
+                    accept="image/*"
+                >
+
+                <small class="text-muted">
+
+                    Kosongkan jika tidak ingin mengganti gambar.
+
+                </small>
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
                     Status
+
                 </label>
 
                 <select
                     name="status"
                     class="form-select"
                 >
+
                     <option
-                        value="dibuka"
-                        {{ $room->status == 'dibuka' ? 'selected' : '' }}
+                        value="tersedia"
+                        {{ $room->status == 'tersedia' ? 'selected' : '' }}
                     >
-                        Dibuka
+
+                        Tersedia
+
                     </option>
 
                     <option
                         value="ditutup"
                         {{ $room->status == 'ditutup' ? 'selected' : '' }}
                     >
+
                         Ditutup
+
                     </option>
+
                 </select>
+
             </div>
 
             <button

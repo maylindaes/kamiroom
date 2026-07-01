@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use App\Models\Faculty;
-
+use Illuminate\Support\Facades\Storage;
 
 class AdminRoomController extends Controller
 {
@@ -48,9 +48,36 @@ class AdminRoomController extends Controller
 
     public function store(Request $request)
     {
-        Room::create($request->all());
+        $data = $request->validate([
 
-        return redirect('/admin/rooms');
+            'fakultas_id' => 'required',
+
+            'nama_ruangan' => 'required',
+
+            'kapasitas' => 'required|integer',
+
+            'fasilitas' => 'nullable',
+
+            'status' => 'required',
+
+            'alasan_ditutup' => 'nullable',
+
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+
+        ]);
+
+        if ($request->hasFile('gambar')) {
+
+            $data['gambar'] = $request
+                ->file('gambar')
+                ->store('rooms', 'public');
+
+        }
+
+        Room::create($data);
+
+        return redirect('/admin/rooms')
+            ->with('success', 'Ruangan berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -70,10 +97,45 @@ class AdminRoomController extends Controller
 
     public function update(Request $request, $id)
     {
-        Room::findOrFail($id)
-            ->update($request->all());
+        $room = Room::findOrFail($id);
 
-        return redirect('/admin/rooms');
+        $data = $request->validate([
+
+            'fakultas_id' => 'required',
+
+            'nama_ruangan' => 'required',
+
+            'kapasitas' => 'required|integer',
+
+            'fasilitas' => 'nullable',
+
+            'status' => 'required',
+
+            'alasan_ditutup' => 'nullable',
+
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+
+        ]);
+
+        if ($request->hasFile('gambar')) {
+
+            // Hapus gambar lama jika ada
+            if ($room->gambar && Storage::disk('public')->exists($room->gambar)) {
+
+                Storage::disk('public')->delete($room->gambar);
+
+            }
+
+            // Simpan gambar baru
+            $data['gambar'] = $request
+                ->file('gambar')
+                ->store('rooms', 'public');
+        }
+
+        $room->update($data);
+
+        return redirect('/admin/rooms')
+            ->with('success', 'Ruangan berhasil diperbarui.');
     }
 
     public function destroy($id)
