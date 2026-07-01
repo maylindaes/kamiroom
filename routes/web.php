@@ -14,12 +14,19 @@ use App\Http\Controllers\AdminBorrowingController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\LandingController;
 
-Route::get('/', [LoginController::class, 'showLogin'])
+Route::get('/', [LandingController::class, 'index'])
+    ->name('landing');
+
+Route::get('/login', [LoginController::class, 'showLogin'])
     ->name('login');
 
 Route::post('/login', [LoginController::class, 'login'])
     ->name('login.submit');
+
+Route::post('/logout', [LoginController::class, 'logout'])
+    ->name('logout');
 
 //User
 Route::middleware('auth')->group(function () {

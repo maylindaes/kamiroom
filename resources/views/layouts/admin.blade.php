@@ -271,13 +271,14 @@ body{
 
                     </span>
 
-                    <a
-                        href="/logout"
-                        class="btn btn-outline-danger btn-sm"
-                    >
-                        <i class="bi bi-box-arrow-right"></i>
-                        Logout
-                    </a>
+                    <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                        @csrf
+
+                        <button class="btn btn-outline-danger btn-sm">
+                            <i class="bi bi-box-arrow-right"></i>
+                            Logout
+                        </button>
+                    </form>
 
                 </div>
 
