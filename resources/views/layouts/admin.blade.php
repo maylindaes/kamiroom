@@ -328,7 +328,44 @@ body{
 
 <script
 src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-></script>
+>
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    document.querySelectorAll('.auto-search').forEach(function (element) {
+
+        let timer;
+
+        if (element.tagName === 'SELECT') {
+
+            element.addEventListener('change', function () {
+
+                this.form.submit();
+
+            });
+
+        } else {
+
+            element.addEventListener('input', function () {
+
+                clearTimeout(timer);
+
+                timer = setTimeout(() => {
+
+                    this.form.submit();
+
+                }, 500);
+
+            });
+
+        }
+
+    });
+
+});
+</script>
 
 </body>
 </html>

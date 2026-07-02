@@ -26,23 +26,23 @@
 
             <div class="row">
 
-                <div class="col-md-6">
+                <div class="col-md-8">
 
                     <input
                         type="text"
                         name="search"
-                        class="form-control"
+                        class="form-control auto-search"
                         placeholder="Cari nomor, pengaju atau kegiatan..."
                         value="{{ request('search') }}"
                     >
 
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-4">
 
                     <select
                         name="status"
-                        class="form-select"
+                        class="form-select auto-search"
                     >
 
                         <option value="semua">
@@ -71,16 +71,6 @@
                         </option>
 
                     </select>
-
-                </div>
-
-                <div class="col-md-3">
-
-                    <button
-                        class="btn btn-primary w-100"
-                    >
-                        Cari
-                    </button>
 
                 </div>
 

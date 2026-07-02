@@ -98,25 +98,15 @@
 
             <div class="row">
 
-                <div class="col-md-10">
+                <div class="col-md-12">
 
                     <input
                         type="text"
                         name="search"
-                        class="form-control"
+                        class="form-control auto-search"
                         placeholder="Cari fakultas..."
                         value="{{ request('search') }}"
                     >
-
-                </div>
-
-                <div class="col-md-2">
-
-                    <button
-                        class="btn btn-primary w-100"
-                    >
-                        Cari
-                    </button>
 
                 </div>
 
