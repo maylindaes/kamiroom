@@ -113,27 +113,6 @@
 
                             </a>
 
-                            <form
-                                action="/admin/calendar/{{ $event->id }}"
-                                method="POST"
-                                class="d-inline"
-                            >
-
-                                @csrf
-                                @method('DELETE')
-
-                                <button
-                                    type="submit"
-                                    class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Hapus event ini?')"
-                                >
-                                    <i class="bi bi-trash"></i>
-                                    Hapus
-
-                                </button>
-
-                            </form>
-
                         </td>
 
                     </tr>

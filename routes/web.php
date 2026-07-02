@@ -206,11 +206,6 @@ Route::middleware('admin')->group(function () {
         [CalendarEventController::class, 'update']
     );
 
-    Route::delete(
-        '/admin/calendar/{id}',
-        [CalendarEventController::class, 'destroy']
-    );
-
     // FACULTIES
     Route::get(
         '/admin/faculties',

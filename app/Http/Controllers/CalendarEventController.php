@@ -4,11 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\CalendarEvent;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class CalendarEventController extends Controller
 {
     public function index()
     {
+        // Hapus event yang tanggalnya sudah lewat
+        CalendarEvent::where(
+            'tanggal',
+            '<',
+            Carbon::today()
+        )->delete();
+
         $events = CalendarEvent::orderBy('tanggal')->get();
 
         return view(
@@ -74,11 +82,4 @@ class CalendarEventController extends Controller
             ->with('success','Event berhasil diupdate');
     }
 
-
-    public function destroy($id)
-    {
-        CalendarEvent::findOrFail($id)->delete();
-
-        return redirect('/admin/calendar');
-    }
 }
